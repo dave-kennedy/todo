@@ -1,0 +1,70 @@
+:host {
+  display: block;
+  font-family: Avenir, Arial, sans-serif;
+  font-size: 18px;
+  margin: 0 auto;
+  max-width: 540px;
+}
+
+h1 {
+  color: white;
+  letter-spacing: 0.5rem;
+  margin-top: 10rem;
+  text-transform: uppercase;
+}
+
+input[type=text] {
+  background: none;
+  border: none;
+  font: inherit;
+  outline: none;
+}
+
+.bb-1 {
+  border-bottom: 1px solid hsl(236, 33%, 92%);
+}
+
+.bg-white {
+  background-color: white;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.just-between {
+  justify-content: space-between;
+}
+
+.just-center {
+  justify-content: center;
+}
+
+.mb-1 {
+  margin-bottom: 1rem;
+}
+
+.p-1 {
+  padding: 1rem;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.rounded {
+  border-radius: 0.5rem;
+}
+
+.shadow {
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.1);
+}
+
+.text-sm {
+  font-size: 0.85rem;
+}
+

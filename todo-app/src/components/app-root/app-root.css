@@ -4,5 +4,6 @@
   background-size: contain;
   display: block;
   height: 100%;
+  overflow: hidden;
 }
 
