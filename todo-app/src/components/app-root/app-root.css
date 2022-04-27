@@ -1,4 +1,8 @@
 :host {
+  background-image: url('assets/bg-desktop-light.jpg');
+  background-repeat: no-repeat;
+  background-size: contain;
   display: block;
+  height: 100%;
 }
 
