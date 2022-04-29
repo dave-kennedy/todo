@@ -1,4 +1,5 @@
 import {Component, State, h} from '@stencil/core';
+import {ApiService} from './api-service';
 
 type Item = {
   complete: boolean;
@@ -13,6 +14,7 @@ type Item = {
   styleUrl: 'todo-list.css'
 })
 export class TodoList {
+  apiService: ApiService = new ApiService();
 
   @State()
   filter: string = 'all';
@@ -21,11 +23,7 @@ export class TodoList {
   incompleteItems: number = 0;
 
   @State()
-  items: Item[] = [
-    {complete: false, id: 1, order: 1, text: 'Task 1'},
-    {complete: false, id: 2, order: 2, text: 'Task 2'},
-    {complete: false, id: 3, order: 3, text: 'Task 3'}
-  ];
+  items: Item[];
 
   addItem(text: string) {
     const id = this.items.reduce(
@@ -44,20 +42,45 @@ export class TodoList {
     };
 
     this.items = [...this.items, item];
+
+    // TODO: handle errors
+    this.apiService.createItem(item);
   }
 
   clearCompleted() {
-    this.items = this.items.filter(item => !item.complete);
+    this.items = this.items.filter(item => {
+      if (!item.complete) {
+        return true;
+      }
+
+      // TODO: handle errors
+      this.apiService.deleteItem(item.id);
+      return false;
+    });
   }
 
   completeItem(item: Item) {
     this.items = this.items.map(it => {
       if (it === item) {
         it.complete = !it.complete;
+
+        // TODO: handle errors
+        this.apiService.updateItem(item);
       }
 
       return it;
     });
+  }
+
+  async componentWillLoad() {
+    const response = await this.apiService.getItems();
+
+    if (!response) {
+      // TODO: display friendly error
+      return;
+    }
+
+    this.items = response['data'];
   }
 
   componentWillRender() {
@@ -83,7 +106,15 @@ export class TodoList {
   }
 
   removeItem(item: Item) {
-    this.items = this.items.filter(it => it !== item);
+    this.items = this.items.filter(it => {
+      if (it !== item) {
+        return true;
+      }
+
+      // TODO: handle errors
+      this.apiService.deleteItem(item.id);
+      return false;
+    });
   }
 
   render() {
