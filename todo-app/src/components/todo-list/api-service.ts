@@ -26,7 +26,7 @@ export class ApiService {
         return;
       }
 
-      return;
+      return true;
   }
 
   async getItems() {

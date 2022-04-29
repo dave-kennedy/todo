@@ -23,7 +23,7 @@ export class TodoList {
   incompleteItems: number = 0;
 
   @State()
-  items: Item[];
+  items: Item[] = [];
 
   addItem(text: string) {
     const id = this.items.reduce(
@@ -80,7 +80,7 @@ export class TodoList {
       return;
     }
 
-    this.items = response['data'];
+    this.items = response.data;
   }
 
   componentWillRender() {
