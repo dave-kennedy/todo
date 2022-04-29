@@ -12,6 +12,12 @@ app.use(cors());
 // parse the request data as JSON and add it to req.body
 app.use(express.json());
 
+// Log requests
+app.use((req, res, next) => {
+  console.log(new Date().toLocaleString(), req.method, req.url);
+  next();
+});
+
 // Simulate high latency
 // app.use((req, res, next) => setTimeout(next, 1000));
 
