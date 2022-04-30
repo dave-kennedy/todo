@@ -1,4 +1,5 @@
 const db = require('./db');
+const parse = require('./parse');
 
 class DatabaseError extends Error {
   constructor(...params) {
@@ -14,19 +15,12 @@ class NotFoundError extends Error {
   }
 }
 
-class ParseError extends Error {
-  constructor(...params) {
-    super(...params);
-    this.name = 'ParseError';
-  }
-}
-
 function createItem(item) {
   const parsedArgs = {
-    complete: _parseBoolean(item.complete),
-    id: _parseInteger(item.id),
-    order: _parseInteger(item.order),
-    text: _parseString(item.text)
+    complete: parse.bool(item.complete),
+    id: parse.integer(item.id),
+    order: parse.integer(item.order),
+    text: parse.string(item.text)
   };
 
   const insertResult = db.run(
@@ -44,7 +38,7 @@ function createItem(item) {
 
 function deleteItem(id) {
   const parsedArgs = {
-    id: _parseInteger(id)
+    id: parse.integer(id)
   };
 
   const deleteResult = db.run(
@@ -62,7 +56,7 @@ function deleteItem(id) {
 
 function getItem(id) {
   const parsedArgs = {
-    id: _parseInteger(id)
+    id: parse.integer(id)
   };
 
   const selectResult = db.get(
@@ -79,8 +73,8 @@ function getItem(id) {
 
 function getItems(page = 1, limit = 10) {
   const parsedArgs = {
-    page: _parseInteger(page),
-    limit: _parseInteger(limit)
+    page: parse.integer(page),
+    limit: parse.integer(limit)
   };
 
   const offset = (parsedArgs.page - 1) * parsedArgs.limit;
@@ -95,10 +89,10 @@ function getItems(page = 1, limit = 10) {
 
 function updateItem(id, item) {
   const parsedArgs = {
-    id: _parseInteger(id), // Use the arg here. Not required in request body.
-    complete: _parseBoolean(item.complete),
-    order: _parseInteger(item.order),
-    text: _parseString(item.text)
+    id: parse.integer(id), // Use the arg here. Not required in request body.
+    complete: parse.bool(item.complete),
+    order: parse.integer(item.order),
+    text: parse.string(item.text)
   };
 
   const updateResult = db.run(
@@ -114,60 +108,9 @@ function updateItem(id, item) {
   return {data: parsedArgs};
 }
 
-function _parseBoolean(value) {
-  if (typeof value != 'boolean' && typeof value != 'string') {
-    throw new ParseError(`Unable to parse ${value} as boolean`);
-  }
-
-  if (typeof value == 'boolean') {
-      return value ? 1 : 0;
-  }
-
-  const stringValue = value.trim().toLowerCase();
-
-  if (stringValue != 'true' && stringValue != 'false') {
-    throw new ParseError(`Unable to parse ${value} as boolean`);
-  }
-
-  return stringValue == 'true' ? 1 : 0;
-}
-
-// Return value as an integer.
-//
-// This works better than `parseInt` or `parseFloat`, which are too lenient for
-// validation, e.g.:
-//
-//    parseInt('1a') == 1
-//    parseFloat('1a') == 1
-//
-// If someone is calls this API with one of those weird values, this will catch
-// it and throw an error.
-function _parseInteger(value) {
-  if (isNaN(value)) {
-    throw new ParseError(`Unable to parse ${value} as integer`);
-  }
-
-  const floatValue = parseFloat(value);
-
-  if ((floatValue | 0) !== floatValue) {
-    throw new ParseError(`Unable to parse ${value} as integer`);
-  }
-
-  return floatValue;
-}
-
-function _parseString(value) {
-  if (typeof value != 'string') {
-    throw new ParseError(`Unable to parse ${value} as string`);
-  }
-
-  return value.trim();
-}
-
 module.exports = {
   DatabaseError,
   NotFoundError,
-  ParseError,
   createItem,
   deleteItem,
   getItem,

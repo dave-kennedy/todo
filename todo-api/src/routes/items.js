@@ -1,5 +1,6 @@
 const express = require('express');
 const itemsService = require('../services/items');
+const parse = require('../services/parse');
 
 const router = express.Router();
 
@@ -7,7 +8,7 @@ router.get('/', function(req, res, next) {
   try {
     return res.json(itemsService.getItems(req.query.page, req.query.limit));
   } catch(err) {
-    if (err instanceof itemsService.ParseError) {
+    if (err instanceof parse.ParseError) {
       return res.status(400).json({'error': err.message});
     }
 
@@ -20,7 +21,7 @@ router.get('/:id', function(req, res, next) {
   try {
     return res.json(itemsService.getItem(req.params.id));
   } catch(err) {
-    if (err instanceof itemsService.ParseError) {
+    if (err instanceof parse.ParseError) {
       return res.status(400).json({'error': err.message});
     }
 
@@ -37,7 +38,7 @@ router.post('/', function(req, res, next) {
   try {
     return res.json(itemsService.createItem(req.body));
   } catch(err) {
-    if (err instanceof itemsService.ParseError) {
+    if (err instanceof parse.ParseError) {
       return res.status(400).json({'error': err.message});
     }
 
@@ -50,7 +51,7 @@ router.put('/:id', function(req, res, next) {
   try {
     return res.json(itemsService.updateItem(req.params.id, req.body));
   } catch(err) {
-    if (err instanceof itemsService.ParseError) {
+    if (err instanceof parse.ParseError) {
       return res.status(400).json({'error': err.message});
     }
 
@@ -63,7 +64,7 @@ router.delete('/:id', function(req, res, next) {
   try {
     return res.json(itemsService.deleteItem(req.params.id));
   } catch(err) {
-    if (err instanceof itemsService.ParseError) {
+    if (err instanceof parse.ParseError) {
       return res.status(400).json({'error': err.message});
     }
 
