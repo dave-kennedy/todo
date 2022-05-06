@@ -1,10 +1,26 @@
 # Todo REST API
 
-To start the API, run:
+## Setup
+
+Install the dependencies:
+
+```
+npm install
+```
+
+## Run
+
+Start the API:
 
 ```
 npm start
 ```
 
-By default, the API will listen on port 3000.
+## Test
+
+Run all the tests:
+
+```
+npm test
+```
 
